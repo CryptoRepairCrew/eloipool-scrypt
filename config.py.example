@@ -55,6 +55,9 @@ TrackerAddr = 'LTCJwziUvKaESEqnsLyXPgYAksKT3zBUdb'
 # JSON-RPC server for getmemorypool
 UpstreamURI = 'http://user:pass@localhost:9332'
 
+RPCHost = '0.0.0.0'
+RPCPort = 9001
+
 # Set to True if you want shares meeting the upstream target to wait for a
 # response from the upstream server before logging them. Otherwise, for such
 # shares, upstreamResult will always be True and upstreamRejectReason will
