@@ -655,7 +655,7 @@ def stopServers():
 	
 	logger.info('Stopping servers...')
 	global bcnode, server
-	servers = (bcnode, server, stratumsrv)
+	servers = (bcnode, server, stratumsrv, rpcsrv)
 	for s in servers:
 		s.keepgoing = False
 	for s in servers:
@@ -903,5 +903,9 @@ if __name__ == "__main__":
 	stratum_thr = threading.Thread(target=stratumsrv.serve_forever)
 	stratum_thr.daemon = True
 	stratum_thr.start()
+	
+	rpc_thr = Threading.Thread(target=rpcserv.serve_forever)
+	rpc_thr.daemon = True
+	rpc_thr.start()
 	
 	server.serve_forever()
