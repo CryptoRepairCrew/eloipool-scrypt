@@ -112,12 +112,76 @@ BitcoinNodeAddresses = (
 # Addresses that are allowed to "spoof" from address with the X-Forwarded-For header
 TrustedForwarders = ('::ffff:127.0.0.1',)
 
-
 # Logging of shares:
 ShareLogging = (
 	{
 		'type': 'logfile',
-		'filename': '/var/eloipool/shares.log',
-		'format': "{time}	{username}	{YN(not(rejectReason))}	{YN(upstreamResult)}	{rejectReason}	{difficulty}\n",
+		'filename': 'share-logfile',
+		'format': "{time} {Q(remoteHost)} {username} {YN(not(rejectReason))} {dash(YN(upstreamResult))} {dash(rejectReason)} {solution}\n",
+	},
+	{
+		'type': 'sql',
+		'engine': 'postgres',
+		'dbopts': {
+			'host': 'localhost',
+			'database': 'pooldb',
+			'user': 'eloipool',
+			'password': 'somethingsecret',
+		},
+		'statement': "insert into shares (rem_host, username, our_result, upstream_result, reason, solution) values ({Q(remoteHost)}, {username}, {YN(not(rejectReason))}, {YN(upstreamResult)}, {rejectReason}, decode({solution}, 'hex'))",
+	},
+	{
+		'type': 'sql',
+		'engine': 'mysql',
+		'dbopts': {
+			'host': 'localhost',
+			'db': 'pooldb',
+			'user': 'eloipool',
+			'password': 'somethingsecret',
+		},
+		'statement': "insert into shares (rem_host, username, our_result, upstream_result, reason, solution) values ({Q(remoteHost)}, {username}, {YN(not(rejectReason))}, {YN(upstreamResult)}, {rejectReason}, unhex({solution}))",
+	},
+	{
+		'type': 'sql',
+		'engine': 'sqlite',
+		'dbopts': {
+			'database': 'share.db',
+		},
+		'statement': "insert into shares (remoteHost, username, rejectReason, upstreamResult, solution) values ({remoteHost}, {username}, {rejectReason}, {upstreamResult}, {solution})",
 	},
 )
+
+# Authentication
+# There currently are 2 modules.
+# - allowall will allow every username/password combination
+# - simplefile will use the username/passwords from a file, which contains username<tab>password\n with no \n on the last line.
+Authentication =  (
+	{
+		'module': 'allowall',
+	},
+#	{
+#		'module': 'simplefile',
+#		'filename': 'userdatabase',
+#	},
+)
+
+### Settings related to poolserver logging
+
+# By default, significant events will be printed to the interactive console
+# You can customize your logging using either simple parameters, or Python's advanced logging framework
+# Note that using Python's logging framework will override the default console logging!
+
+# To simply log everything to the system log (syslog) as well:
+# LogToSysLog = True
+
+# To make a log file:
+# LogFile = 'filename.log'
+
+# For a rotating log file:
+LogFile = {
+	'filename': 'filename.log',
+	'when': 'midnight',
+	'backupCount': 7,
+}
+# For details, see:
+# http://docs.python.org/3/library/logging.handlers.html#logging.handlers.TimedRotatingFileHandler
