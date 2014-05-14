@@ -29,8 +29,8 @@ class usemysql:
         try :
             self.dbc.execute(
                 """SELECT password
-FROM pool_worker
-WHERE username = '%s';""" % (user,))
+FROM workers
+WHERE name = '%s';""" % (user,))
             response = self.dbc.fetchone()
             print(repr(response))
             if response == None :
@@ -38,8 +38,8 @@ WHERE username = '%s';""" % (user,))
                 self.connect()
                 self.dbc.execute(
                     """SELECT password
-FROM pool_worker
-WHERE username = '%s';""" % (user,))
+FROM workers
+WHERE name = '%s';""" % (user,))
                 response = self.dbc.fetchone()
             db_password = response[0]
         except :
