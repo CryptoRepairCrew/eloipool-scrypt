@@ -86,6 +86,7 @@ class merkleMaker(threading.Thread):
 		
 		self.currentBlock = (None, None, None)
 		self.lastBlock = (None, None, None)
+		self.SubsidyAlgo = lambda height: 5000000000 >> (height // 210000)
 		
 		self.currentMerkleTree = None
 		self.merkleRoots = deque(maxlen=self.WorkQueueSizeRegular[1])
@@ -109,7 +110,7 @@ class merkleMaker(threading.Thread):
 		self.nextMerkleUpdate = 0
 	
 	def createClearMerkleTree(self, height):
-		subsidy = 5000000000 >> (height // 840000)
+		subsidy = SubsidyAlgo(height)
 
 		cbtxn = self.makeCoinbaseTxn(subsidy, False)
 		cbtxn.assemble()
