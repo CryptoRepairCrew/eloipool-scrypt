@@ -115,24 +115,10 @@ BitcoinNodeAddresses = (
 # Addresses that are allowed to "spoof" from address with the X-Forwarded-For header
 TrustedForwarders = ('::ffff:127.0.0.1',)
 
+COIN = "LTC"
+
 # Logging of shares:
 ShareLogging = (
-	{
-		'type': 'logfile',
-		'filename': 'share-logfile',
-		'format': "{time} {Q(remoteHost)} {username} {YN(not(rejectReason))} {dash(YN(upstreamResult))} {dash(rejectReason)} {solution}\n",
-	},
-	{
-		'type': 'sql',
-		'engine': 'postgres',
-		'dbopts': {
-			'host': 'localhost',
-			'database': 'pooldb',
-			'user': 'eloipool',
-			'password': 'somethingsecret',
-		},
-		'statement': "insert into shares (rem_host, username, our_result, upstream_result, reason, solution) values ({Q(remoteHost)}, {username}, {YN(not(rejectReason))}, {YN(upstreamResult)}, {rejectReason}, decode({solution}, 'hex'))",
-	},
 	{
 		'type': 'sql',
 		'engine': 'mysql',
@@ -142,16 +128,9 @@ ShareLogging = (
 			'user': 'eloipool',
 			'password': 'somethingsecret',
 		},
-		'statement': "insert into shares (rem_host, username, our_result, upstream_result, reason, solution) values ({Q(remoteHost)}, {username}, {YN(not(rejectReason))}, {YN(upstreamResult)}, {rejectReason}, unhex({solution}))",
+		'statement': "insert into shares (user, ip, oresult, uresult. reason, solution, difficulty, coin) values ({username}, {Q(remoteHost)}, {YN(not(rejectReason))}, {YN(upstreamResult)}, {rejectReason}, unhex({solution}), "LTC")",
 	},
-	{
-		'type': 'sql',
-		'engine': 'sqlite',
-		'dbopts': {
-			'database': 'share.db',
-		},
-		'statement': "insert into shares (remoteHost, username, rejectReason, upstreamResult, solution) values ({remoteHost}, {username}, {rejectReason}, {upstreamResult}, {solution})",
-	},
+
 )
 
 # Authentication
